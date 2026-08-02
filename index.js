@@ -1,5 +1,10 @@
 import { readFile, readFileSync, writeFile, writeFileSync } from "fs";
 import { createServer } from "http";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // ================= FIES ================//
 
@@ -37,7 +42,11 @@ const server = createServer((req, res) => {
   } else if (pathName === "/product") {
     res.end("This Is Product!!!!!");
   } else if (pathName === "/api") {
-    readFile("./dev-data/data.json","utf-8");
+    readFile(`${__dirname}/dev-data/data.json`, "utf-8", (err, data) => {
+      const productData = JSON.parse(data);
+      // res.writeHead(200, {"content-type": "application/json"})
+      res.end(data);
+    });
   } else {
     res.writeHead(404, {
       "content-type": "text/html",
