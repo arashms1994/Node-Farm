@@ -34,6 +34,9 @@ const __dirname = dirname(__filename);
 
 // ================= SERVER ================//
 
+const data = readFileSync(`${__dirname}/dev-data/data.json`, "utf-8");
+const dataObj = JSON.parse(data);
+
 const server = createServer((req, res) => {
   const pathName = req.url;
 
@@ -42,11 +45,8 @@ const server = createServer((req, res) => {
   } else if (pathName === "/product") {
     res.end("This Is Product!!!!!");
   } else if (pathName === "/api") {
-    readFile(`${__dirname}/dev-data/data.json`, "utf-8", (err, data) => {
-      const productData = JSON.parse(data);
-      // res.writeHead(200, {"content-type": "application/json"})
-      res.end(data);
-    });
+    res.writeHead(200, { "content-type": "application/json" });
+    res.end(data);
   } else {
     res.writeHead(404, {
       "content-type": "text/html",
