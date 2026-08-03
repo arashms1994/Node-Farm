@@ -2,6 +2,7 @@ import { readFile, readFileSync, writeFile, writeFileSync } from "fs";
 import { createServer } from "http";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+import { parse } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -53,20 +54,26 @@ const tempOverview = readFileSync(
   `${__dirname}/templates/overview.html`,
   "utf-8",
 );
+
 const tempProduct = readFileSync(
   `${__dirname}/templates/product.html`,
   "utf-8",
 );
+
 const tempCard = readFileSync(`${__dirname}/templates/card.html`, "utf-8");
 
 const data = readFileSync(`${__dirname}/dev-data/data.json`, "utf-8");
 const dataObj = JSON.parse(data);
 
 const server = createServer((req, res) => {
-  const pathName = req.url;
+  const { pathname, searchParams } = new URL(
+    req.url,
+    `http://${req.headers.host}`,
+  );
+  const query = Object.fromEntries(searchParams);
 
   // overview page
-  if (pathName === "/" || pathName === "/overview") {
+  if (pathname === "/" || pathname === "/overview") {
     res.writeHead(200, { "content-type": "text/html" });
 
     const cardsHtml = dataObj
@@ -78,11 +85,17 @@ const server = createServer((req, res) => {
     res.end(overviewOutput);
 
     // product page
-  } else if (pathName === "/product") {
-    res.end("This Is Product!!!!!");
+  } else if (pathname === "/product") {
+    res.writeHead(200, { "content-type": "text/html" });
+
+    const product = dataObj[query.id];
+    const productOutput = replaceTemplate(tempProduct, product);
+    console.log(product);
+
+    res.end(productOutput);
 
     // api page
-  } else if (pathName === "/api") {
+  } else if (pathname === "/api") {
     res.writeHead(200, { "content-type": "application/json" });
     res.end(data);
 
