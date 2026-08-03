@@ -90,7 +90,6 @@ const server = createServer((req, res) => {
 
     const product = dataObj[query.id];
     const productOutput = replaceTemplate(tempProduct, product);
-    console.log(product);
 
     res.end(productOutput);
 
