@@ -31,8 +31,33 @@ const __dirname = dirname(__filename);
 //   });
 // });
 // console.log("hellppppppppppppp");
-
 // ================= SERVER ================//
+
+const replaceTemplate = (temp, product) => {
+  let output = temp.replace(/{%PRODUCTNAME%}/g, product.productName);
+  output = output.replace(/{%IMAGE%}/g, product.image);
+  output = output.replace(/{%QUANTITY%}/g, product.quantity);
+  output = output.replace(/{%PRICE%}/g, product.price);
+  output = output.replace(/{%NUTRIENTS%}/g, product.nutrients);
+  output = output.replace(/{%DESCRIPTION%}/g, product.description);
+  output = output.replace(/{%ID%}/g, product.id);
+
+  if (!product.organic) {
+    output = output.replace(/{%NOT_ORGANIC%}/g, "not-organic");
+  }
+
+  return output;
+};
+
+const tempOverview = readFileSync(
+  `${__dirname}/templates/overview.html`,
+  "utf-8",
+);
+const tempProduct = readFileSync(
+  `${__dirname}/templates/product.html`,
+  "utf-8",
+);
+const tempCard = readFileSync(`${__dirname}/templates/card.html`, "utf-8");
 
 const data = readFileSync(`${__dirname}/dev-data/data.json`, "utf-8");
 const dataObj = JSON.parse(data);
@@ -40,13 +65,28 @@ const dataObj = JSON.parse(data);
 const server = createServer((req, res) => {
   const pathName = req.url;
 
+  // overview page
   if (pathName === "/" || pathName === "/overview") {
-    res.end("This Is Overview!!!!!");
+    res.writeHead(200, { "content-type": "text/html" });
+
+    const cardsHtml = dataObj
+      .map((el) => replaceTemplate(tempCard, el))
+      .join("");
+
+    const overviewOutput = tempOverview.replace("{%PRODUCT_CARDS%}", cardsHtml);
+
+    res.end(overviewOutput);
+
+    // product page
   } else if (pathName === "/product") {
     res.end("This Is Product!!!!!");
+
+    // api page
   } else if (pathName === "/api") {
     res.writeHead(200, { "content-type": "application/json" });
     res.end(data);
+
+    // not found page
   } else {
     res.writeHead(404, {
       "content-type": "text/html",
