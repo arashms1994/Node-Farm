@@ -3,6 +3,7 @@ import { createServer } from "http";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { parse } from "node:url";
+import replaceTemplate from "./modules/replaceTemplate.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -33,22 +34,6 @@ const __dirname = dirname(__filename);
 // });
 // console.log("hellppppppppppppp");
 // ================= SERVER ================//
-
-const replaceTemplate = (temp, product) => {
-  let output = temp.replace(/{%PRODUCTNAME%}/g, product.productName);
-  output = output.replace(/{%IMAGE%}/g, product.image);
-  output = output.replace(/{%QUANTITY%}/g, product.quantity);
-  output = output.replace(/{%PRICE%}/g, product.price);
-  output = output.replace(/{%NUTRIENTS%}/g, product.nutrients);
-  output = output.replace(/{%DESCRIPTION%}/g, product.description);
-  output = output.replace(/{%ID%}/g, product.id);
-
-  if (!product.organic) {
-    output = output.replace(/{%NOT_ORGANIC%}/g, "not-organic");
-  }
-
-  return output;
-};
 
 const tempOverview = readFileSync(
   `${__dirname}/templates/overview.html`,
