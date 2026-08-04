@@ -4,6 +4,7 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { parse } from "node:url";
 import replaceTemplate from "./modules/replaceTemplate.js";
+import slugify from "slugify";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -49,6 +50,9 @@ const tempCard = readFileSync(`${__dirname}/templates/card.html`, "utf-8");
 
 const data = readFileSync(`${__dirname}/dev-data/data.json`, "utf-8");
 const dataObj = JSON.parse(data);
+
+const slugs = dataObj.map((el) => slugify(el.productName, { lower: true }));
+console.log(slugs);
 
 const server = createServer((req, res) => {
   const { pathname, searchParams } = new URL(
