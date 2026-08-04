@@ -1,0 +1,26 @@
+{
+  "name": "node-farm",
+  "version": "1.0.0",
+  "description": "Learning NodeJs",
+  "homepage": "https://github.com/arashms1994/Node-Farm#readme",
+  "bugs": {
+    "url": "https://github.com/arashms1994/Node-Farm/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arashms1994/Node-Farm.git"
+  },
+  "license": "ISC",
+  "author": "Arash",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "slugify": "^1.6.9"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
